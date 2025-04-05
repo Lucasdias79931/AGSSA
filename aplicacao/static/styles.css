@@ -1,0 +1,138 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+header {
+    background-color: #003366;
+    color: #ffffff;
+    padding: 20px 0;
+    border-bottom: 4px solid #0066cc;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+header h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.header-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #0066cc;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.header-button:hover {
+    background-color: #004999;
+}
+
+.container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1200px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.description {
+    font-size: 18px;
+    margin: 20px 0;
+    line-height: 1.6;
+}
+
+.buttons {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    background-color: #0066cc;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #004999;
+}
+
+footer {
+    background-color: #003366;
+    color: #ffffff;
+    padding: 10px 0;
+    text-align: center;
+    border-top: 4px solid #0066cc;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+/* Estilos específicos para o formulário */
+form {
+    margin-top: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-control-file,
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.btn-primary {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #0066cc;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #004999;
+}

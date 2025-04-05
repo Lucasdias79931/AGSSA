@@ -1,0 +1,21 @@
+{% extends 'layout_base.html' %}
+
+{% block title %}Análise{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>AGSSA - Análise</h2>
+    <form action="/analise" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="modelo">Upload do Modelo:</label>
+            <input type="file" class="form-control-file" id="modelo" name="modelo" required>
+        </div>
+        <div class="form-group">
+            <label for="sequencias">Upload das sequências:</label>
+            <input type="file" class="form-control-file" id="sequencias" name="sequencias" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Analisar</button>
+    </form>
+</div>
+{% endblock %}

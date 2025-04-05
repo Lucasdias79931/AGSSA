@@ -1,0 +1,36 @@
+{% extends 'layout_base.html' %}
+
+{% block title %}Treinamento{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>AGSSA - Treinamento</h2>
+  <p class="description">
+    Por favor, faça o upload das suas sequências(.fasta), e anotações para iniciar o processo de treinamento.
+    Certifique-se de fornecer um endereço de email válido para receber notificações sobre o status do processamento.
+  </p>
+  <form action="/treinamento" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="especie">Espécie:</label>
+      <select class="form-control" id="especie" name="especie" required>
+        {% for especie in especies %}
+        <option value="{{ especie }}">{{ especie }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="sequencias">Upload das sequências:</label>
+      <input type="file" class="form-control-file" id="sequencias" name="sequencias" required>
+    </div>
+    <div class="form-group">
+      <label for="anotacoes">Upload das anotações:</label>
+      <input type="file" class="form-control-file" id="anotacoes" name="anotacoes" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Seu email:</label>
+      <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Processar</button>
+  </form>
+</div>
+{% endblock %}
