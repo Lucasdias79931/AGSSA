@@ -15,3 +15,10 @@ aplicacao/.env
 
 # Arquivos de cache e logs
 *.log
+
+# Ignorar tudo dentro de results/ e uploads/
+aplicacao/results/*
+aplicacao/uploads/*
+
+!results/.gitkeep
+!uploads/.gitkeep

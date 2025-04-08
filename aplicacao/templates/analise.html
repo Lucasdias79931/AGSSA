@@ -1,10 +1,10 @@
 {% extends 'layout_base.html' %}
 
-{% block title %}Análise{% endblock %}
+{% block title %}Genotipagem de Sequências Virais{% endblock %}
 
 {% block content %}
 <div class="container">
-    <h2>AGSSA - Análise</h2>
+    <h2>AGSSA - Genotipagem de Sequências</h2>
     <form action="/analise" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="modelo">Upload do Modelo:</label>
@@ -14,8 +14,11 @@
             <label for="sequencias">Upload das sequências:</label>
             <input type="file" class="form-control-file" id="sequencias" name="sequencias" required>
         </div>
-
-        <button type="submit" class="btn btn-primary">Analisar</button>
+        <div class="form-group">
+            <label for="email">Seu email:</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+          </div>
+        <button type="submit" class="btn btn-primary">Processar</button>
     </form>
 </div>
 {% endblock %}
