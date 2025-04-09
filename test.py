@@ -4,9 +4,9 @@ import sys
 import os
 import subprocess
 
-def treinamento(filefasta, annotation, pythonFile, outputFile):
+def treinamento(pythonFile, sequencesFile, annotation, outputFile, especie):
     try:
-        command = ["python3", pythonFile, filefasta, annotation, outputFile, "spike"]
+        command = ["python3", pythonFile, sequencesFile, annotation, outputFile, especie]
         subprocess.run(command, check=True)
     except IOError as e:
         print(f"IOError: {e}")
@@ -15,23 +15,36 @@ def treinamento(filefasta, annotation, pythonFile, outputFile):
     except Exception as e:
         print(f"Erro inesperado: {e}")
 
-if len(sys.argv) < 3:
+if len(sys.argv) < 4:
     print("Faltando parâmetros!")
     print("Uso: python3 treinamento.py <diretório com sequências> <número de arquivos>")
+    
+    print("Argumentos passados!")
+    for arg in range(len(sys.argv)):
+        print(f"{arg}: " + sys.argv[arg])
     sys.exit(1)
 
 here = os.path.abspath(os.path.dirname(__file__))
 resultDirectory = os.path.join(here, "resultTests")
 os.makedirs(resultDirectory, exist_ok=True)
 
-sequencias_dir = sys.argv[1]
-num_arquivos = int(sys.argv[2])
+# executável de treinamento
 
-for i in range(num_arquivos):
-    filefasta = os.path.join(sequencias_dir, f"{i}.fasta")
-    annotation = os.path.join(sequencias_dir, f"{i}.gff")  # ou outro caminho
-    outputFile = os.path.join(resultDirectory, f"{i}_output.txt")
-    pythonFile = "modelo.py"  # ou qualquer outro script que você deseje usar
+pythonExc = sys.argv[1]
 
-    print(f"Treinando com {filefasta}...")
-    treinamento(filefasta, annotation, pythonFile, outputFile)
+# Arquivo de sequencia
+
+sequencias = sys.argv[2]
+
+# Arquivo de anotação
+
+anotacao = sys.argv[3]
+
+
+
+especie = "spike"
+
+
+treinamento(pythonExc, sequencias, anotacao, resultDirectory, especie)
+
+
