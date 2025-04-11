@@ -1,9 +1,9 @@
-version: "3.8"
+# docker-compose.yml
 
 services:
   back_end:
     build: .
-    image: lucas/agssa
+    image: lucasdias79931/agssa
     ports:
       - "5000:5000"
     env_file:
@@ -16,7 +16,7 @@ services:
       - celery
 
   rabbitmq:
-    image: rabbitmq:3-management
+    image: docker.io/library/rabbitmq:3-management
     ports:
       - "5673:5673"
       - "15673:15673"
