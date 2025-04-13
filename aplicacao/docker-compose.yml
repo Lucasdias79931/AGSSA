@@ -11,6 +11,8 @@ services:
       - ./.env
     restart: unless-stopped
     volumes:
+      - ./uploads:/app/uploads       # 👈 volume compartilhado
+      - ./results:/app/results       # 👈 volume compartilhado
       - db-data:/etc/data
     depends_on:
       - rabbitmq
@@ -21,7 +23,6 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
@@ -33,6 +34,8 @@ services:
     depends_on:
       - rabbitmq
     volumes:
+      - ./uploads:/app/uploads       # 👈 volume compartilhado
+      - ./results:/app/results       # 👈 volume compartilhado
       - db-data:/etc/data
 
 volumes:
