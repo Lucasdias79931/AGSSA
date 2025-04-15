@@ -1,14 +1,16 @@
 import os
 import time
-import shutil
-import dill
-import numpy as np
-from core_treino import pre_processamento_sequencias, executar_treinamento
 import csv
 import platform
 import psutil
 import subprocess
+import dill
+import numpy as np
+import shutil
+from core_treino import pre_processamento_sequencias, executar_treinamento
+from Bio import SeqIO
 
+# Coletar informações da máquina
 def get_cpu_name():
     try:
         with open("/proc/cpuinfo") as f:
@@ -24,12 +26,24 @@ def get_motherboard_name():
         for line in output.splitlines():
             if "Product Name" in line:
                 return line.split(":")[1].strip()
-    except Exception as e:
-        return f"Erro ao obter placa-mãe: {e}"
+    except Exception:
+        return f"Erro ao obter placa-mãe"
 
 def get_memory_size():
     return f"{round(psutil.virtual_memory().total / (1024 ** 3), 2)} GB"
 
+# Contar número de sequências
+def analize_sequences_file(sequence_file_path):
+    try:
+        count = 0
+        with open(sequence_file_path) as handle:
+            for _, _ in SeqIO.FastaIO.SimpleFastaParser(handle):
+                count += 1
+        return count
+    except Exception:
+        return "Erro"
+
+# Analisar modelo .obj com dill
 def analisar_modelo(model_path):
     try:
         with open(model_path, "rb") as f:
@@ -45,92 +59,86 @@ def analisar_modelo(model_path):
         print(f"Erro ao carregar modelo: {e}")
         return {}
 
-# Diretórios base
-base_dir = os.path.abspath(os.path.dirname(__file__))
-file_to_test_dir = os.path.join(base_dir, "fileToTest")
-results_dir = os.path.join(base_dir, "resultTests")
-os.makedirs(results_dir, exist_ok=True)
+# Caminhos
+here = os.path.abspath(os.path.dirname(__file__))
+file_to_test_dir = os.path.join(here, "fileToTest")
+results_dir = os.path.join(here, "resultTests")
+agua_script = os.path.join(here, "AGUA", "AGUA_treinamento.py")
+csv_path = os.path.join(results_dir, "resultados_teste.csv")
 
-agua_script = os.path.join(base_dir, "AGUA", "AGUA_treinamento.py")
+os.makedirs(results_dir, exist_ok=True)
 especie = "spike"
 data_teste = time.strftime("%d/%m/%Y %H:%M:%S")
 
-log_path = os.path.join(results_dir, "testes_resultados.txt")
-
-
-dados_do_computador = {
+# Info do sistema
+dados_pc = {
     "cpu": get_cpu_name(),
     "memoria": get_memory_size(),
-    "placa_mae": get_motherboard_name()
+    "placa_mae": get_motherboard_name(),
+    "data_execucao": data_teste
 }
 
-# Grava a introdução e informações do sistema uma única vez
-with open(log_path, "a") as log:
-    log.write("### TESTE AUTOMATIZADO AGSSA ###\n")
-    log.write(f"Data de execução: {data_teste}\n")
-    log.write("Informações da máquina:\n")
-    for k, v in dados_do_computador.items():
-        log.write(f"- {k}: {v}\n")
-    log.write("\n")
+# Cabeçalho CSV
+header = [
+    "cpu", "memoria", "placa_mae", "data_execucao",
+    "file_name", "especie", "numbers_of_sequence", "time_of_process",
+    "mean_resolution", "std_resolution", "min_cluster_resolution",
+    "n_clusters", "n_classes"
+]
 
-# Loop para todos os pares de teste
-for i in range(1, 3):
-    print(f"\n>> Testando conjunto {i}...")
+# Iniciar CSV
+with open(csv_path, "w", newline="") as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerow(header)
 
-   
-    original_seq = os.path.join(file_to_test_dir, f"_sequencias_treinamento.fasta")
-    original_anot = os.path.join(file_to_test_dir, f"_anotacoes.txt")
-    output_path = os.path.join(results_dir, f"result_{i}")
-    os.makedirs(output_path, exist_ok=True)
+    # Linha com informações do PC
+    writer.writerow([
+        dados_pc["cpu"], dados_pc["memoria"], dados_pc["placa_mae"], dados_pc["data_execucao"],
+        "", "", "", "", "", "", "", "", ""
+    ])
 
-    # Cópias para preservar os originais
-    seq_path = os.path.join(output_path, "sequencias_treinamento.fasta")
-    anot_path = os.path.join(output_path, "anotacoes.txt")
-    shutil.copyfile(original_seq, seq_path)
-    shutil.copyfile(original_anot, anot_path)
+    # Início dos testes
+    for i in range(1, 3):
+        print(f"\n>> Testando conjunto {i}...")
 
-    info_path = os.path.join(output_path, "informacoes_processamento.txt")
+        try:
+            # Copiar arquivos para pasta de resultado
+            original_seq = os.path.join(file_to_test_dir, f"_sequencias_treinamento.fasta")
+            original_anot = os.path.join(file_to_test_dir, f"_anotacoes.txt")
 
-    with open(info_path, "w") as f:
-        f.write(f"Data de Início: {data_teste}\n")
+            output_path = os.path.join(results_dir, f"result_{i}")
+            os.makedirs(output_path, exist_ok=True)
 
-    try:
-        start = time.time()
+            seq_path = os.path.join(output_path, "sequencias_treinamento.fasta")
+            anot_path = os.path.join(output_path, "anotacoes.txt")
 
-        # Pré-processamento
-        sequencias_processadas = pre_processamento_sequencias(seq_path, anot_path, especie)
-        print(f"Saída do pré-processamento: {sequencias_processadas}")
-        if not os.path.exists(sequencias_processadas):
-            print("Arquivo de sequências tratadas NÃO encontrado.")
-        elif os.path.getsize(sequencias_processadas) == 0:
-            print("Arquivo de sequências tratadas está VAZIO.")
+            shutil.copyfile(original_seq, seq_path)
+            shutil.copyfile(original_anot, anot_path)
 
-        # Treinamento (sem e-mail)
-        executar_treinamento(
-            agua_script,
-            sequencias_processadas,
-            anot_path,
-            output_path,
-            especie,
-            informacoes_path=info_path
-        )
+            start = time.time()
+            sequencias_processadas = pre_processamento_sequencias(seq_path, anot_path, especie)
+            executar_treinamento(agua_script, sequencias_processadas, anot_path, output_path, especie)
+            tempo = time.time() - start
 
+            model_path = os.path.join(output_path, f"model.{especie}.obj")
+            metrics = analisar_modelo(model_path)
 
-        tempo = time.time() - start
+            writer.writerow([
+                dados_pc["cpu"], dados_pc["memoria"], dados_pc["placa_mae"], dados_pc["data_execucao"],
+                f"sequencias_spike{i}.fasta", especie,
+                analize_sequences_file(original_seq),
+                f"{tempo:.3f} s",
+                metrics.get("mean_resolution", "N/A"),
+                metrics.get("std_resolution", "N/A"),
+                metrics.get("min_cluster_resolution", "N/A"),
+                metrics.get("n_clusters", "N/A"),
+                metrics.get("n_classes", "N/A")
+            ])
 
-        model_file = os.path.join(output_path, f"model.{especie}.obj")
-        metrics = analisar_modelo(model_file)
-
-        with open(log_path, "a") as log:
-            log.write(f"\n--- TESTE {i} ---\n")
-            log.write(f"Data: {data_teste}\n")
-            log.write(f"Arquivo de entrada: sequencias_spike{i}.fasta\n")
-            log.write(f"Tempo de execução: {tempo:.3f} segundos\n")
-            for k, v in metrics.items():
-                log.write(f"{k}: {v}\n")
-
-    except Exception as e:
-        print(f"Erro no teste {i}: {e}")
-        with open(log_path, "a") as log:
-            log.write(f"\n--- TESTE {i} ---\n")
-            log.write(f"Erro: {e}\n")
+        except Exception as e:
+            print(f"Erro no teste {i}: {e}")
+            writer.writerow([
+                dados_pc["cpu"], dados_pc["memoria"], dados_pc["placa_mae"], dados_pc["data_execucao"],
+                f"sequencias_spike{i}.fasta", especie,
+                "Erro", "Erro", "Erro", "Erro", "Erro", "Erro", "Erro"
+            ])
