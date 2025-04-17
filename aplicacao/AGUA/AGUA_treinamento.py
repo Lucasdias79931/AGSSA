@@ -188,7 +188,7 @@ for seq in codonSequences:  # olho: se assume que todas as sequencias tem ou nã
             if len(stoppos) == 1 and (stoppos[0] == nprm-1):  # last stop found
                 laststop = 1
             else:
-                # print(" stop codon ", stp, " found in frame in sequence ", alignment[ctr].id, " at positions ", stoppos[0])
+                print(" stop codon ", stp, " found in frame in sequence ", alignment[ctr].id, " at positions ", stoppos[0])
                 stopfound = True
                 break
 
@@ -206,9 +206,9 @@ for seq in codonSequences:  # olho: se assume que todas as sequencias tem ou nã
 # check stop codon filtering
 
 Nseq = len(filtered_codonSeqs)
-# print("number of sequences before filtering: ", len(codonSequences), " after: ", Nseq)
-# print("length in codons of sequences before filtering: ", len(codonSequences[0]), " after: ", len(filtered_codonSeqs[0]))
-
+print("number of sequences before filtering: ", len(codonSequences), " after: ", Nseq)
+print("length in codons of sequences before filtering: ", len(codonSequences[0]), " after: ", len(filtered_codonSeqs[0]))
+exit(1)
 # transformando o dataset em matriz de codons
 
 cdnseq = np.array(filtered_codonSeqs)
