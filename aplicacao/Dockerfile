@@ -38,6 +38,10 @@ RUN go install github.com/virus-evolution/gofasta@latest && \
 # Instala o zip
 RUN apt-get update && apt-get install -y zip
 
+# instalar o gunicorn
+RUN pip install gunicorn
+
+
 # ---------- Instala dependências Python ----------
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
