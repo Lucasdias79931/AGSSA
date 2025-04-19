@@ -35,6 +35,9 @@ RUN git clone https://github.com/lh3/minimap2.git && \
 RUN go install github.com/virus-evolution/gofasta@latest && \
     cp /root/go/bin/gofasta /usr/local/bin/
 
+# Instala o zip
+RUN apt-get update && apt-get install -y zip
+
 # ---------- Instala dependências Python ----------
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
