@@ -1,0 +1,6 @@
+.env
+__pychach__
+uploads
+results
+resultTests/
+fileToTest/

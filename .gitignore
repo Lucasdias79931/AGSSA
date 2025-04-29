@@ -23,5 +23,4 @@ aplicacao/uploads/*
 !results/.gitkeep
 !uploads/.gitkeep
 
-
-resultTests
+fileToTest
