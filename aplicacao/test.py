@@ -98,15 +98,15 @@ with open(csv_path, "w", newline="") as csvfile:
     ])
 
     # Início dos testes
-    for i in range(1, 2):
+    for i in range(1):
         print(f"\n>> Testando conjunto {i}...")
 
         try:
             # Copiar arquivos para pasta de resultado
             
 
-            original_seq = os.path.join(file_to_test_dir, f"sequencias_spike{0}.fasta")
-            original_anot = os.path.join(file_to_test_dir, f"sequencias_spike{0}Annot.txt")
+            original_seq = os.path.join(file_to_test_dir, f"sequencias_spike{i}.fasta")
+            original_anot = os.path.join(file_to_test_dir, f"sequencias_spike{i}Annot.txt")
 
             #original_seq = os.path.join(file_to_test_dir, f"_sequencias_treinamento.fasta")
             #original_anot = os.path.join(file_to_test_dir, f"_anotacoes.txt")
