@@ -12,6 +12,7 @@ def possui_mais_de_40_ns(sequencia):
     # Define a regex para encontrar mais de 40 'N', 'n' ou '-' seguidos
     padrao = re.compile(r'[Nn-]{41,}')
     # Verifica se o padrão existe na sequência
+    
     return bool(padrao.search(sequencia))
 
 

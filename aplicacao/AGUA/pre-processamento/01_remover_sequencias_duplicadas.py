@@ -1,53 +1,37 @@
+from Bio import SeqIO
 import os
 import sys
-from Bio import SeqIO
+import hashlib
 
-
-def remove_duplicates(input_file, output_file):
-    # Input
-    input_obj = open(input_file, 'r')
-
-    # Output
-    output_obj = open(output_file, 'w')
-
-    # Dictionary to store unique sequences by their sequence string
-    uniq_seqs = {}
-
-    # Iterate through input sequences
-    for qry in SeqIO.parse(input_obj, 'fasta'):
-        seq_str = str(qry.seq)
-
-        # Check if this sequence string has been seen before
-        if seq_str not in uniq_seqs:
-            # If it's a new sequence string, save it
-            uniq_seqs[seq_str] = qry
-
-    # Making unique sequences
-    final_seq = list(uniq_seqs.values())
-
-    # Write output file
-    SeqIO.write(final_seq, output_obj, 'fasta')
-
-    # Close objects
-    input_obj.close()
-    output_obj.close()
-
+def transformInHash(sequence: str) -> str:
+    return hashlib.sha512(sequence.encode()).hexdigest()
 
 if __name__ == "__main__":
     # Caminho para as sequências
-    if len(sys.argv) > 1:
+    try:
         arquivo_sequencias = sys.argv[1]
         print(arquivo_sequencias)
 
-        if os.path.exists(arquivo_sequencias):
-            pasta_upload = os.path.dirname(arquivo_sequencias)
+        pasta_upload = os.path.dirname(arquivo_sequencias)
 
-            path_sequencias_filtradas = os.path.join(
-                pasta_upload, 'sequencias_unicas.fasta')
+        path_sequencias_filtradas = os.path.join(
+            pasta_upload, 'sequencias_unicas.fasta')
 
-            # Chamar a função para remover duplicatas e salvar o arquivo final
-            remove_duplicates(arquivo_sequencias, path_sequencias_filtradas)
-        else:
-            print(f"Arquivo {arquivo_sequencias} não encontrado.")
-    else:
-        print("Informe o caminho do arquivo")
+        total_sequenciasProcessadas = 0
+        hashes = set()
+
+        with open(arquivo_sequencias, "r") as inputFile, open(path_sequencias_filtradas, "w") as outFile:
+            for record in SeqIO.parse(inputFile, "fasta"):
+                total_sequenciasProcessadas += 1
+                
+                seq = transformInHash(str(record.seq))
+
+                if seq not in hashes:
+                    hashes.add(seq)
+                    SeqIO.write(record, outFile, "fasta")
+    except FileNotFoundError:
+        print(f"Erro: O arquivo '{arquivo_sequencias}' não foi encontrado.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Erro inesperado: {e}")
+        sys.exit(1)
