@@ -105,8 +105,8 @@ with open(csv_path, "w", newline="") as csvfile:
             # Copiar arquivos para pasta de resultado
             
 
-            original_seq = os.path.join(file_to_test_dir, f"sequencias1.fasta")
-            original_anot = os.path.join(file_to_test_dir, f"sequencias1Ann.txt")
+            original_seq = os.path.join(file_to_test_dir, f"spike_AA.fasta")
+            original_anot = os.path.join(file_to_test_dir, f"annotation_AA.txt")
 
             output_path = os.path.join(results_dir, f"result_{i}")
             os.makedirs(output_path, exist_ok=True)
