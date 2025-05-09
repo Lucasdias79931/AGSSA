@@ -1,0 +1,21 @@
+
+# Arquivos temporários do Python
+__pycache__
+*.py[cod]
+
+# Configs locais e arquivos sensíveis
+*.env
+.python-version
+
+# Diretórios internos específicos
+__pycache__/
+.env
+
+# Arquivos de cache e logs
+*.log
+
+# Ignorar tudo dentro de results/ e uploads/
+results
+uploads
+
+resultTests
